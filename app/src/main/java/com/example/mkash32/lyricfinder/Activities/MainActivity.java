@@ -1,16 +1,25 @@
-package com.example.mkash32.lyricfinder;
+package com.example.mkash32.lyricfinder.Activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.mkash32.lyricfinder.Adapters.MusicPagerAdapter;
+import com.example.mkash32.lyricfinder.R;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private ViewPager viewPager;
+    private TabLayout tabs;
+    private MusicPagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        tabs = (TabLayout) findViewById(R.id.tabs);
+        pagerAdapter = new MusicPagerAdapter(getSupportFragmentManager(), this);
+        viewPager.setAdapter(pagerAdapter);
+        tabs.setupWithViewPager(viewPager);
     }
 
     @Override

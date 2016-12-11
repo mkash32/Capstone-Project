@@ -1,17 +1,16 @@
-package com.example.mkash32.lyricfinder;
+package com.example.mkash32.lyricfinder.Activities;
 
 import android.content.Context;
-import android.graphics.Movie;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
 
+import com.example.mkash32.lyricfinder.Adapters.LyricsRecyclerAdapter;
+import com.example.mkash32.lyricfinder.R;
+import com.example.mkash32.lyricfinder.Song;
 import com.squareup.picasso.Picasso;
 
 public class LyricsActivity extends AppCompatActivity {

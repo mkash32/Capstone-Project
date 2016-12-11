@@ -5,8 +5,7 @@ package com.example.mkash32.lyricfinder;
  */
 
 public class Song {
-    private String title, artist, lyrics;
-
+    private String title, artist, lyrics, imageUrl;
     public Song(String title, String artist) {
         this.title = title;
         this.artist = artist;
@@ -38,5 +37,13 @@ public class Song {
 
     public void setLyrics(String lyrics) {
         this.lyrics = lyrics;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

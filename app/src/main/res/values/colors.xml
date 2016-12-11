@@ -5,4 +5,5 @@
     <color name="colorPrimaryDark">#1976d2</color>
 
     <color name="colorAccent">#FF4081</color>
+    <color name="card_button">#03a9f4</color>
 </resources>
