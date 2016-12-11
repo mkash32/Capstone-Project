@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.example.mkash32.lyricfinder.Activities.FeedFragment;
 
 /**
- * Created by user on 11/12/16.
+ * Created by Aakash on 11/12/16.
  */
 
 public class MusicPagerAdapter extends FragmentPagerAdapter {

@@ -1,7 +1,7 @@
 package com.example.mkash32.lyricfinder;
 
 /**
- * Created by user on 11/12/16.
+ * Created by Aakash on 11/12/16.
  */
 
 public class Song {

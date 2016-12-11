@@ -11,7 +11,7 @@ import com.example.mkash32.lyricfinder.R;
 import com.example.mkash32.lyricfinder.Song;
 
 /**
- * Created by user on 11/12/16.
+ * Created by Aakash on 11/12/16.
  */
 
 public class LyricsRecyclerAdapter extends RecyclerView.Adapter<LyricsRecyclerAdapter.RecyclerViewHolder> {
