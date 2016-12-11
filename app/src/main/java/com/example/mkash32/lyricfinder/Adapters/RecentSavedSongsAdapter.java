@@ -1,6 +1,7 @@
 package com.example.mkash32.lyricfinder.Adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mkash32.lyricfinder.Activities.RecentSavedFragment;
 import com.example.mkash32.lyricfinder.R;
-import com.example.mkash32.lyricfinder.Song;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -20,12 +19,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Aakash on 11/12/16.
  */
 
-public class SongsRecyclerAdapter extends RecyclerView.Adapter<SongsRecyclerAdapter.ViewHolder>{
-    private ArrayList<Song> songs;
+public class RecentSavedSongsAdapter extends RecyclerView.Adapter<RecentSavedSongsAdapter.ViewHolder>{
+    private Cursor mCursor;
     private Context c;
 
-    public SongsRecyclerAdapter(ArrayList<Song> songs, Context c) {
-        this.songs = songs;
+    public RecentSavedSongsAdapter(Context c) {
         this.c = c;
     }
 
@@ -38,9 +36,9 @@ public class SongsRecyclerAdapter extends RecyclerView.Adapter<SongsRecyclerAdap
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        final Song current = songs.get(i);
-        viewHolder.getArtist().setText(current.getArtist());
-        viewHolder.getTitle().setText(current.getTitle());
+        mCursor.moveToPosition(i);
+        viewHolder.getArtist().setText(mCursor.getString(RecentSavedFragment.COL_ARTIST));
+        viewHolder.getTitle().setText(mCursor.getString(RecentSavedFragment.COL_TITLE));
         viewHolder.getStar().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,12 +46,15 @@ public class SongsRecyclerAdapter extends RecyclerView.Adapter<SongsRecyclerAdap
             }
         });
 
-        Picasso.with(c).load(current.getImageUrl()).into(viewHolder.getArtistImage());
+        Picasso.with(c).load(mCursor.getString(RecentSavedFragment.COL_IMAGE_URL)).into(viewHolder.getArtistImage());
     }
 
     @Override
     public int getItemCount() {
-        return songs.size();
+        if (mCursor == null)
+            return 0;
+
+        return mCursor.getCount();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -84,5 +85,10 @@ public class SongsRecyclerAdapter extends RecyclerView.Adapter<SongsRecyclerAdap
         public CircleImageView getArtistImage() {
             return artistImage;
         }
+    }
+
+    public void setCursor(Cursor mCursor) {
+        this.mCursor = mCursor;
+        notifyDataSetChanged();
     }
 }

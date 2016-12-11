@@ -39,9 +39,13 @@ public class SongContract {
         public static final String COLUMN_LYRICS = "lyrics";
         public static final String COLUMN_RECENT = "recent";
 
-        //
         public static Uri buildSongUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildSongRecentUri(boolean recent) {
+            int recentInt = recent?1:0;
+            return CONTENT_URI.buildUpon().appendPath(""+recentInt).build();
         }
 
         public static long getRecentFromUri(Uri uri) {
