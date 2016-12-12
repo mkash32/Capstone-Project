@@ -1,1 +1,1 @@
-include ':app', ':jMusixMatch-1.1.4-SNAPSHOT'
+include ':app'

@@ -3,8 +3,10 @@ package com.example.mkash32.lyricfinder.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.UriMatcher;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,7 +23,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.mkash32.lyricfinder.Adapters.MusicPagerAdapter;
+import com.example.mkash32.lyricfinder.Constants;
+import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
+import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -192,5 +197,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if(requestCode == 1000 && resultCode == RESULT_OK) {
             getLocation();
         }
+    }
+
+    public void testMatcher() {
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = SongContract.CONTENT_AUTHORITY;
+
+        matcher.addURI(authority, SongContract.PATH_SONG, 100);
+        matcher.addURI(authority, SongContract.PATH_SONG + "/#" , 101);
+        matcher.addURI(authority, SongContract.PATH_SEARCH + "/*/*", 102);
+        matcher.addURI(authority, SongContract.PATH_SEARCH, 103);
+        Uri uri = SongContract.SongEntry.buildTitleArtistUri("title", "artist");
+        //int result = matcher.match(uri)
     }
 }

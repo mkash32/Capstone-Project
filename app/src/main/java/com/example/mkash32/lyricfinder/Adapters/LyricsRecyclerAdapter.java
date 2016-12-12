@@ -15,16 +15,21 @@ import com.example.mkash32.lyricfinder.Song;
  */
 
 public class LyricsRecyclerAdapter extends RecyclerView.Adapter<LyricsRecyclerAdapter.RecyclerViewHolder> {
-    private Song song;
+    private String lyrics = "Loading...";
     private Context c;
 
-    public LyricsRecyclerAdapter(Song song, Context c) {
-        this.song = song;
+    public LyricsRecyclerAdapter(String lyrics, Context c) {
+        this.lyrics = lyrics;
         this.c = c;
     }
 
-    public void setSong(Song song) {
-        this.song = song;
+    public LyricsRecyclerAdapter(Context c) {
+        this.c = c;
+    }
+
+    public void setLyrics(String lyrics) {
+        this.lyrics = lyrics;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -35,8 +40,8 @@ public class LyricsRecyclerAdapter extends RecyclerView.Adapter<LyricsRecyclerAd
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        TextView lyrics = holder.getLyrics();
-        lyrics.setText(song.getLyrics());
+        TextView lyricsTv = holder.getLyricsTv();
+        lyricsTv.setText(lyrics);
     }
 
     @Override
@@ -46,15 +51,15 @@ public class LyricsRecyclerAdapter extends RecyclerView.Adapter<LyricsRecyclerAd
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder
     {
-        private TextView lyrics;
+        private TextView lyricsTv;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
-            lyrics = (TextView) itemView.findViewById(R.id.tv_lyrics);
+            lyricsTv = (TextView) itemView.findViewById(R.id.tv_lyrics);
         }
 
-        public TextView getLyrics() {
-            return lyrics;
+        public TextView getLyricsTv() {
+            return lyricsTv;
         }
     }
 

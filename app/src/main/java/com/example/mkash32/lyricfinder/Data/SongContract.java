@@ -48,8 +48,20 @@ public class SongContract {
             return CONTENT_URI.buildUpon().appendPath(""+isRecent).build();
         }
 
+        public static Uri buildTitleArtistUri(String title, String artist) {
+            return CONTENT_URI.buildUpon().appendPath(title).appendPath(artist).build();
+        }
+
         public static long getRecentFromUri(Uri uri) {
             return Long.parseLong(uri.getPathSegments().get(1));
+        }
+
+        public static String getTitleFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static String getArtistFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
         }
     }
 

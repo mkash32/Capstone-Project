@@ -22,6 +22,7 @@ import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
+import com.google.android.gms.common.api.Api;
 
 
 /**
@@ -107,7 +108,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
         if(type == 0) {
             Intent i = new Intent(getActivity(), ApiIntentService.class);
             i.setAction(ApiIntentService.ACTION_TOP_TRACKS);
-            i.putExtra("url", Constants.getTopTracksURL("india"));
+            i.putExtra(ApiIntentService.EXT_URL, Constants.getLFTopTracksURL("india"));
             getActivity().startService(i);
         }
 

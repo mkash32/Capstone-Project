@@ -16,7 +16,8 @@ public class SongProvider extends ContentProvider {
 
     static final int SONG = 100;    // General
     static final int SONG_RS = 101; // Recent or Saved songs
-    static final int SEARCH = 102;
+    static final int SONG_AT = 102; // Artist and Title
+    static final int SEARCH = 103;
 
     private static final SQLiteQueryBuilder songQueryBuilder;
     private static final SQLiteQueryBuilder searchQueryBuilder;
@@ -67,12 +68,30 @@ public class SongProvider extends ContentProvider {
         );
     }
 
+    private Cursor getSongByArtistTitle(Uri uri, String[] projection, String sortOrder) {
+        String title = SongContract.SongEntry.getTitleFromUri(uri);
+        String artist = SongContract.SongEntry.getArtistFromUri(uri);
+
+        String selection = sTitleAndArtistSelection;
+        String[] selectionArgs = new String[]{title, artist};
+
+        return songQueryBuilder.query(mSongHelper.getReadableDatabase(),
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = SongContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, SongContract.PATH_SONG, SONG);
         matcher.addURI(authority, SongContract.PATH_SONG + "/#" , SONG_RS);
+        matcher.addURI(authority, SongContract.PATH_SONG + "/*/*", SONG_AT);
         matcher.addURI(authority, SongContract.PATH_SEARCH, SEARCH);
 
         return matcher;
@@ -129,15 +148,16 @@ public class SongProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         final SQLiteDatabase db = mSongHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        Uri returnUri;
+        Uri returnUri = null;
 
         switch (match) {
             case SONG: {
-                long _id = db.insert(SongContract.SongEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
-                    returnUri = SongContract.SongEntry.buildSongUri(_id);
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                try {
+                    long _id = db.insertOrThrow(SongContract.SongEntry.TABLE_NAME, null, values);
+                    if ( _id > 0 )
+                        returnUri = SongContract.SongEntry.buildSongUri(_id);
+                } catch (SQLiteConstraintException exception) {
+                }
                 break;
             }
             default:
@@ -168,6 +188,11 @@ public class SongProvider extends ContentProvider {
             // "song/#"
             case SONG_RS: {
                 retCursor = getRecentOrSavedSongs(uri, projection, sortOrder);
+                break;
+            }
+            // "song/*/*"
+            case SONG_AT: {
+                retCursor = getSongByArtistTitle(uri, projection, sortOrder);
                 break;
             }
             // "search"

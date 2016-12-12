@@ -41,7 +41,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 // Perform search
                 String text = searchText.getText().toString();
-                String url = Constants.getSearchURL(text);
+                String url = Constants.getLFSearchURL(text);
                 Intent i = new Intent(activity, ApiIntentService.class);
                 i.setAction(ApiIntentService.ACTION_SEARCH);
                 i.putExtra("url", url);

@@ -26,7 +26,7 @@ public class Utilities {
                 JSONObject songObj = array.getJSONObject(i);
                 String title = songObj.getString("name");
                 String artist = songObj.getJSONObject("artist").getString("name");
-                String imageUrl = songObj.getJSONArray("image").getJSONObject(0).getString("#text");
+                String imageUrl = songObj.getJSONArray("image").getJSONObject(2).getString("#text");
 
                 ContentValues value = new ContentValues();
                 value.put(SongContract.SearchEntry.COLUMN_TITLE, title);
@@ -51,7 +51,7 @@ public class Utilities {
                 JSONObject songObj = array.getJSONObject(i);
                 String title = songObj.getString("name");
                 String artist = songObj.getString("artist");
-                String imageUrl = songObj.getJSONArray("image").getJSONObject(0).getString("#text");
+                String imageUrl = songObj.getJSONArray("image").getJSONObject(2).getString("#text");
 
                 ContentValues value = new ContentValues();
                 value.put(SongContract.SearchEntry.COLUMN_TITLE, title);
@@ -60,6 +60,34 @@ public class Utilities {
                 values[i] = value;
             }
             return values;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static long parseTrack(String string) {
+        try {
+            JSONObject object = new JSONObject(string);
+            JSONObject track = object.getJSONObject("message").getJSONObject("body").getJSONObject("track");
+            long trackId = track.getLong("track_id");
+            int has_lyrics = track.getInt("has_lyrics");
+            if(has_lyrics == 0) {
+                return -1;
+            }
+            return trackId;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return -2;
+    }
+
+    public static String parseLyrics(String string) {
+        try {
+            JSONObject object = new JSONObject(string);
+            JSONObject lyricsObj = object.getJSONObject("message").getJSONObject("body").getJSONObject("lyrics");
+            String lyrics = lyricsObj.getString("lyrics_body");
+            return lyrics;
         } catch (JSONException e) {
             e.printStackTrace();
         }

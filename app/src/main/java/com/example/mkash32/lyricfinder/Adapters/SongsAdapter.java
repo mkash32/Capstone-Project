@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mkash32.lyricfinder.Activities.FeedFragment;
+import com.example.mkash32.lyricfinder.Activities.LyricsActivity;
 import com.example.mkash32.lyricfinder.R;
+import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Services.DataIntentService;
 import com.squareup.picasso.Picasso;
 
@@ -43,8 +45,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         mCursor.moveToPosition(i);
-        viewHolder.getArtist().setText(mCursor.getString(FeedFragment.COL_ARTIST));
-        viewHolder.getTitle().setText(mCursor.getString(FeedFragment.COL_TITLE));
+        final String artist = mCursor.getString(FeedFragment.COL_ARTIST);
+        final String title = mCursor.getString(FeedFragment.COL_TITLE);
+        viewHolder.getArtist().setText(artist);
+        viewHolder.getTitle().setText(title);
 
         int recent = 1;
         if (usesSongTable) {
@@ -59,14 +63,18 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
             viewHolder.getStar().setImageResource(R.drawable.ic_action_star);
         }
 
-        String img = mCursor.getString(FeedFragment.COL_IMAGE_URL);
+        final String img = mCursor.getString(FeedFragment.COL_IMAGE_URL);
         if(img != null && !img.isEmpty())
             Picasso.with(activity).load(img).into(viewHolder.getArtistImage());
 
         viewHolder.getContainer().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(activity, LyricsActivity.class);
+                i.putExtra(ApiIntentService.EXT_TITLE, title);
+                i.putExtra(ApiIntentService.EXT_ARTIST, artist);
+                i.putExtra(ApiIntentService.EXT_URL, img);
+                activity.startActivity(i);
             }
         });
 
@@ -77,21 +85,21 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
                 int newr = 0;
                 mCursor.moveToPosition(position);
 
-                i.putExtra("artist",mCursor.getString(FeedFragment.COL_ARTIST));
-                i.putExtra("title",mCursor.getString(FeedFragment.COL_TITLE));
+                i.putExtra(DataIntentService.EXT_ARTIST,mCursor.getString(FeedFragment.COL_ARTIST));
+                i.putExtra(DataIntentService.EXT_TITLE,mCursor.getString(FeedFragment.COL_TITLE));
 
                 if(usesSongTable) {
                     //update the table by changing the recent value for the song
                     //recent -> saved, saved -> recent
                     int current = mCursor.getInt(FeedFragment.COL_RECENT);
                     newr = (current == 0) ? 1 : 0;
-                    i.putExtra("recent", newr);
+                    i.putExtra(DataIntentService.EXT_RECENT, newr);
                     i.setAction(DataIntentService.ACTION_UPDATE);
                     activity.startService(i);
                 } else {
                     // This song is from the search table, so insert it into the song table to save
-                    i.putExtra("recent", 0);
-                    i.putExtra("image", mCursor.getString(FeedFragment.COL_IMAGE_URL));
+                    i.putExtra(DataIntentService.EXT_RECENT, 0);
+                    i.putExtra(DataIntentService.EXT_IMAGE, mCursor.getString(FeedFragment.COL_IMAGE_URL));
                     i.setAction(DataIntentService.ACTION_INSERT);
                     activity.startService(i);
                 }
