@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -15,12 +16,18 @@ public class SongProvider extends ContentProvider {
 
     static final int SONG = 100;    // General
     static final int SONG_RS = 101; // Recent or Saved songs
+    static final int SEARCH = 102;
 
     private static final SQLiteQueryBuilder songQueryBuilder;
+    private static final SQLiteQueryBuilder searchQueryBuilder;
 
     static{
         songQueryBuilder = new SQLiteQueryBuilder();
         songQueryBuilder.setTables(SongContract.SongEntry.TABLE_NAME);
+
+
+        searchQueryBuilder = new SQLiteQueryBuilder();
+        searchQueryBuilder.setTables(SongContract.SearchEntry.TABLE_NAME);
     }
 
     //title = ?
@@ -66,6 +73,7 @@ public class SongProvider extends ContentProvider {
 
         matcher.addURI(authority, SongContract.PATH_SONG, SONG);
         matcher.addURI(authority, SongContract.PATH_SONG + "/#" , SONG_RS);
+        matcher.addURI(authority, SongContract.PATH_SEARCH, SEARCH);
 
         return matcher;
     }
@@ -91,6 +99,9 @@ public class SongProvider extends ContentProvider {
         switch (match) {
             case SONG:
                 rowsDeleted = db.delete(SongContract.SongEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case SEARCH:
+                rowsDeleted = db.delete(SongContract.SearchEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -159,6 +170,19 @@ public class SongProvider extends ContentProvider {
                 retCursor = getRecentOrSavedSongs(uri, projection, sortOrder);
                 break;
             }
+            // "search"
+            case SEARCH: {
+                retCursor = mSongHelper.getReadableDatabase().query(
+                        SongContract.SearchEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -185,5 +209,33 @@ public class SongProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
+    }
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        final SQLiteDatabase db = mSongHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case SEARCH:
+                db.beginTransaction();
+                int returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        try {
+                        long _id = db.insertOrThrow(SongContract.SearchEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        } } catch (SQLiteConstraintException e) {
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            default:
+                return super.bulkInsert(uri, values);
+        }
     }
 }

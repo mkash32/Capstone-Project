@@ -1,11 +1,18 @@
 package com.example.mkash32.lyricfinder.Activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +21,13 @@ import android.widget.TextView;
 import com.example.mkash32.lyricfinder.Adapters.PopularSongsAdapter;
 import com.example.mkash32.lyricfinder.Adapters.RecentSavedSongsAdapter;
 import com.example.mkash32.lyricfinder.Adapters.RecyclerOnTouchListener;
+import com.example.mkash32.lyricfinder.ClearIntentService;
+import com.example.mkash32.lyricfinder.Constants;
+import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
+import com.example.mkash32.lyricfinder.SearchIntentService;
 import com.example.mkash32.lyricfinder.Song;
+import com.example.mkash32.lyricfinder.Utilities;
 
 import java.util.ArrayList;
 
@@ -27,7 +39,7 @@ import java.util.ArrayList;
  * Use the {@link PopularSongsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PopularSongsFragment extends Fragment {
+public class PopularSongsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -39,7 +51,8 @@ public class PopularSongsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
-    private ArrayList<Song> songs;
+    private RecentSavedSongsAdapter adapter;
+
 
     public PopularSongsFragment() {
         // Required empty public constructor
@@ -79,8 +92,8 @@ public class PopularSongsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        songs = new ArrayList<Song>();
-        recycler.setAdapter(new PopularSongsAdapter(songs, getActivity()));
+        adapter = new RecentSavedSongsAdapter(getActivity());
+        recycler.setAdapter(adapter);
         recycler.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), new RecyclerOnTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -88,6 +101,10 @@ public class PopularSongsFragment extends Fragment {
             }
         }));
 
+        Intent i = new Intent(getActivity(), SearchIntentService.class);
+        i.setAction(SearchIntentService.ACTION_TOP_TRACKS);
+        i.putExtra("url", Constants.getTopTracksURL("india"));
+        getActivity().startService(i);
         return v;
     }
 
@@ -107,9 +124,52 @@ public class PopularSongsFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        Intent clear = new Intent(getActivity(), ClearIntentService.class);
+        getActivity().startService(clear);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri popUri = SongContract.SearchEntry.CONTENT_URI;
+
+        return new CursorLoader(getActivity(),
+                popUri,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data != null) {
+            Log.d("Pop loader", "Data items : " + data.getCount());
+            adapter.setCursor(data);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.setCursor(null);
     }
 
     /**

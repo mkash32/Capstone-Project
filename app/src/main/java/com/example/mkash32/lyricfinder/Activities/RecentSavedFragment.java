@@ -45,7 +45,6 @@ public class RecentSavedFragment extends Fragment implements LoaderManager.Loade
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
-    private ArrayList<Song> songs;
     private RecentSavedSongsAdapter adapter;
     private boolean recent;
 
@@ -91,7 +90,6 @@ public class RecentSavedFragment extends Fragment implements LoaderManager.Loade
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        songs = new ArrayList<Song>();
         adapter = new RecentSavedSongsAdapter(getActivity());
         recycler.setAdapter(adapter);
         recycler.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), new RecyclerOnTouchListener.OnItemClickListener() {

@@ -11,6 +11,12 @@ public class Song {
         this.artist = artist;
     }
 
+    public Song(String title, String artist, String imageUrl) {
+        this.title = title;
+        this.artist = artist;
+        this.imageUrl = imageUrl;
+    }
+
     public Song() {
 
     }

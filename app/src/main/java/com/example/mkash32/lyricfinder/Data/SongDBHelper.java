@@ -30,12 +30,23 @@ public class SongDBHelper extends SQLiteOpenHelper {
                 "PRIMARY KEY (" + SongContract.SongEntry.COLUMN_TITLE + ", " + SongContract.SongEntry.COLUMN_TITLE + ") " +
                 " );";
 
+        // Create table to hold search results and most popular
+        // Search consists of 3 values: title, artist name, artist image url
+        final String SQL_CREATE_SEARCH_TABLE = "CREATE TABLE " + SongContract.SearchEntry.TABLE_NAME + " (" +
+                SongContract.SearchEntry.COLUMN_TITLE + " TEXT UNIQUE NOT NULL, " +
+                SongContract.SearchEntry.COLUMN_ARTIST + " TEXT NOT NULL, " +
+                SongContract.SearchEntry.COLUMN_IMAGE_URL + " TEXT, " +
+                "PRIMARY KEY (" + SongContract.SearchEntry.COLUMN_TITLE + ", " + SongContract.SearchEntry.COLUMN_TITLE + ") " +
+                " );";
+
         sqLiteDatabase.execSQL(SQL_CREATE_SONG_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_SEARCH_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SongContract.SongEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SongContract.SearchEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }

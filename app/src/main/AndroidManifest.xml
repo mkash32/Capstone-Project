@@ -31,7 +31,14 @@
             android:name=".Data.SongProvider"
             android:authorities="com.example.mkash32.lyricfinder.app"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true" />
+
+        <service
+            android:name=".SearchIntentService"
+            android:exported="false" />
+        <service
+            android:name=".ClearIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

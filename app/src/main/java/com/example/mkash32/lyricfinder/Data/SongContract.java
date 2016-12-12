@@ -17,6 +17,7 @@ public class SongContract {
 
     // Paths
     public static final String PATH_SONG = "song";
+    public static final String PATH_SEARCH = "search";
 
     /* Inner class that defines the table contents of the Song table */
     public static final class SongEntry implements BaseColumns {
@@ -51,5 +52,25 @@ public class SongContract {
         public static long getRecentFromUri(Uri uri) {
             return Long.parseLong(uri.getPathSegments().get(1));
         }
+    }
+
+    /* Inner class that defines the table contents of the Search table */
+    public static final class SearchEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_SEARCH).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SEARCH;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SEARCH;
+
+        // Table name
+        public static final String TABLE_NAME = "search";
+
+        // Columns
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_ARTIST = "artist";
+        public static final String COLUMN_IMAGE_URL = "image_url";
     }
 }
