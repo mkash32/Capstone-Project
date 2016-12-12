@@ -16,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mkash32.lyricfinder.Adapters.RecentSavedSongsAdapter;
+import com.example.mkash32.lyricfinder.Adapters.SongsAdapter;
 import com.example.mkash32.lyricfinder.Adapters.RecyclerOnTouchListener;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
@@ -41,7 +41,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
-    private RecentSavedSongsAdapter adapter;
+    private SongsAdapter adapter;
 
 
     public SearchFragment() {
@@ -82,7 +82,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new RecentSavedSongsAdapter(getActivity());
+        adapter = new SongsAdapter(getActivity(), false);
         recycler.setAdapter(adapter);
         recycler.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), new RecyclerOnTouchListener.OnItemClickListener() {
             @Override

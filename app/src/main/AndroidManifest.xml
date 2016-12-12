@@ -37,7 +37,7 @@
             android:name=".Services.ApiIntentService"
             android:exported="false" />
         <service
-            android:name=".Services.ClearIntentService"
+            android:name=".Services.DataIntentService"
             android:exported="false" />
 
         <activity android:name=".Activities.SearchActivity"></activity>

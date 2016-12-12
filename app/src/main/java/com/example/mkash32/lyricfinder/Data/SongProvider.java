@@ -201,6 +201,9 @@ public class SongProvider extends ContentProvider {
             case SONG:
                 rowsUpdated = db.update(SongContract.SongEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
+            case SONG_RS:
+                rowsUpdated = db.update(SongContract.SongEntry.TABLE_NAME, values, sTitleAndArtistSelection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

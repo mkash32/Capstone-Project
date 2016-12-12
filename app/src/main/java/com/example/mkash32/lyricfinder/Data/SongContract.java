@@ -44,9 +44,8 @@ public class SongContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildSongRecentUri(int type) {
-            int recentInt = type - 1;
-            return CONTENT_URI.buildUpon().appendPath(""+recentInt).build();
+        public static Uri buildSongRecentUri(int isRecent) {
+            return CONTENT_URI.buildUpon().appendPath(""+isRecent).build();
         }
 
         public static long getRecentFromUri(Uri uri) {

@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.mkash32.lyricfinder.Services.ApiIntentService;
-import com.example.mkash32.lyricfinder.Services.ClearIntentService;
+import com.example.mkash32.lyricfinder.Services.DataIntentService;
 import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.R;
 
@@ -27,14 +27,16 @@ public class SearchActivity extends AppCompatActivity {
         searchText = (EditText) findViewById(R.id.searchText);
 
         // Initialize by clearing search table
-        Intent clear = new Intent(activity, ClearIntentService.class);
+        Intent clear = new Intent(activity, DataIntentService.class);
+        clear.setAction(DataIntentService.ACTION_DELETE);
         activity.startService(clear);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Clear before each search
-                Intent clear = new Intent(activity, ClearIntentService.class);
+                Intent clear = new Intent(activity, DataIntentService.class);
+                clear.setAction(DataIntentService.ACTION_DELETE);
                 activity.startService(clear);
 
                 // Perform search
@@ -52,7 +54,8 @@ public class SearchActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // Clear before exiting
-        Intent clear = new Intent(this, ClearIntentService.class);
+        Intent clear = new Intent(this, DataIntentService.class);
+        clear.setAction(DataIntentService.ACTION_DELETE);
         startService(clear);
     }
 }

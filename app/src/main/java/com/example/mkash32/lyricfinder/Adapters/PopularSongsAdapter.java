@@ -20,7 +20,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Aakash on 11/12/16.
  */
 
-public class PopularSongsAdapter extends RecyclerView.Adapter<RecentSavedSongsAdapter.ViewHolder>{
+public class PopularSongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
     private ArrayList<Song> songs;
     private Context c;
 
@@ -30,14 +30,14 @@ public class PopularSongsAdapter extends RecyclerView.Adapter<RecentSavedSongsAd
     }
 
     @Override
-    public RecentSavedSongsAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+    public SongsAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.songitem_recycler,viewGroup,false);
-        return new RecentSavedSongsAdapter.ViewHolder(itemView);
+        return new SongsAdapter.ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(RecentSavedSongsAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(SongsAdapter.ViewHolder viewHolder, int i) {
         final Song current = songs.get(i);
         viewHolder.getArtist().setText(current.getArtist());
         viewHolder.getTitle().setText(current.getTitle());

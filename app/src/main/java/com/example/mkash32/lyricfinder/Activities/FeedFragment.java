@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mkash32.lyricfinder.Adapters.RecyclerOnTouchListener;
-import com.example.mkash32.lyricfinder.Adapters.RecentSavedSongsAdapter;
+import com.example.mkash32.lyricfinder.Adapters.SongsAdapter;
 import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.Data.SongContract;
@@ -44,7 +44,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
-    private RecentSavedSongsAdapter adapter;
+    private SongsAdapter adapter;
     //0 - Popular, 1 - Recent, 2 - Saved
     private int type = 0;
     public static final int COL_TITLE = 0;
@@ -89,7 +89,12 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new RecentSavedSongsAdapter(getActivity());
+
+        if(type == 1 || type == 2)
+            adapter = new SongsAdapter(getActivity(), true);
+        else
+            adapter = new SongsAdapter(getActivity(), false);
+
         recycler.setAdapter(adapter);
         recycler.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), new RecyclerOnTouchListener.OnItemClickListener() {
             @Override
@@ -138,12 +143,13 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri uri = SongContract.SearchEntry.CONTENT_URI;
+        Uri uri;
 
         if(type == 0) {
             uri = SongContract.SearchEntry.CONTENT_URI;
         } else {
-            uri = SongContract.SongEntry.buildSongRecentUri(type);
+            int isRecent = (type == 1) ? 1 : 0;
+            uri = SongContract.SongEntry.buildSongRecentUri(isRecent);
         }
 
         return new CursorLoader(getActivity(),
