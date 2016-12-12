@@ -25,7 +25,8 @@
         <activity
             android:name=".Activities.LyricsActivity"
             android:label="@string/title_activity_lyrics"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".Activities.MainActivity"/>
 
         <provider
             android:name=".Data.SongProvider"
@@ -40,7 +41,23 @@
             android:name=".Services.DataIntentService"
             android:exported="false" />
 
-        <activity android:name=".Activities.SearchActivity"></activity>
+        <activity android:name=".Activities.SearchActivity" />
+
+        <receiver android:name=".Widget.LyricsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/lyrics_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".Widget.LyricsWidgetService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>
