@@ -34,10 +34,10 @@
             android:exported="true" />
 
         <service
-            android:name=".SearchIntentService"
+            android:name=".Services.ApiIntentService"
             android:exported="false" />
         <service
-            android:name=".ClearIntentService"
+            android:name=".Services.ClearIntentService"
             android:exported="false" />
 
         <activity android:name=".Activities.SearchActivity"></activity>

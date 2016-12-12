@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.mkash32.lyricfinder.ClearIntentService;
+import com.example.mkash32.lyricfinder.Services.ApiIntentService;
+import com.example.mkash32.lyricfinder.Services.ClearIntentService;
 import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.R;
-import com.example.mkash32.lyricfinder.SearchIntentService;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -40,8 +40,8 @@ public class SearchActivity extends AppCompatActivity {
                 // Perform search
                 String text = searchText.getText().toString();
                 String url = Constants.getSearchURL(text);
-                Intent i = new Intent(activity, SearchIntentService.class);
-                i.setAction(SearchIntentService.ACTION_SEARCH);
+                Intent i = new Intent(activity, ApiIntentService.class);
+                i.setAction(ApiIntentService.ACTION_SEARCH);
                 i.putExtra("url", url);
                 activity.startService(i);
             }

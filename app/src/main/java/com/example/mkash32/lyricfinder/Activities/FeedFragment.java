@@ -18,10 +18,10 @@ import android.view.ViewGroup;
 
 import com.example.mkash32.lyricfinder.Adapters.RecyclerOnTouchListener;
 import com.example.mkash32.lyricfinder.Adapters.RecentSavedSongsAdapter;
+import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
-import com.example.mkash32.lyricfinder.SearchIntentService;
 
 
 /**
@@ -100,8 +100,8 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
 
         // If this is Popular Songs tab, then start intent service to obtain pop songs
         if(type == 0) {
-            Intent i = new Intent(getActivity(), SearchIntentService.class);
-            i.setAction(SearchIntentService.ACTION_TOP_TRACKS);
+            Intent i = new Intent(getActivity(), ApiIntentService.class);
+            i.setAction(ApiIntentService.ACTION_TOP_TRACKS);
             i.putExtra("url", Constants.getTopTracksURL("india"));
             getActivity().startService(i);
         }
