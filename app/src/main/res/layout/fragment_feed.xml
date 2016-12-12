@@ -2,14 +2,13 @@
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context="com.example.mkash32.lyricfinder.Activities.RecentSavedFragment">
+tools:context="com.example.mkash32.lyricfinder.Activities.FeedFragment">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycler"
-        android:clipChildren="false"
-        android:padding="5dp">
+        android:clipChildren="false">
     </android.support.v7.widget.RecyclerView>
 
 </FrameLayout>

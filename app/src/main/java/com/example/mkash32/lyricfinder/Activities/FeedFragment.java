@@ -12,34 +12,27 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.mkash32.lyricfinder.Adapters.PopularSongsAdapter;
-import com.example.mkash32.lyricfinder.Adapters.RecentSavedSongsAdapter;
 import com.example.mkash32.lyricfinder.Adapters.RecyclerOnTouchListener;
-import com.example.mkash32.lyricfinder.ClearIntentService;
+import com.example.mkash32.lyricfinder.Adapters.RecentSavedSongsAdapter;
 import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
 import com.example.mkash32.lyricfinder.SearchIntentService;
-import com.example.mkash32.lyricfinder.Song;
-import com.example.mkash32.lyricfinder.Utilities;
 
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PopularSongsFragment.OnFragmentInteractionListener} interface
+ * {@link FeedFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PopularSongsFragment#newInstance} factory method to
+ * Use the {@link FeedFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PopularSongsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FeedFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,9 +45,16 @@ public class PopularSongsFragment extends Fragment implements LoaderManager.Load
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
     private RecentSavedSongsAdapter adapter;
+    //0 - Popular, 1 - Recent, 2 - Saved
+    private int type = 0;
+    public static final int COL_TITLE = 0;
+    public static final int COL_ARTIST = 1;
+    public static final int COL_IMAGE_URL = 2;
+    public static final int COL_LYRICS = 3;
+    public static final int COL_RECENT = 4;
 
 
-    public PopularSongsFragment() {
+    public FeedFragment() {
         // Required empty public constructor
     }
 
@@ -64,11 +64,11 @@ public class PopularSongsFragment extends Fragment implements LoaderManager.Load
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PopularSongsFragment.
+     * @return A new instance of fragment FeedFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PopularSongsFragment newInstance(String param1, String param2) {
-        PopularSongsFragment fragment = new PopularSongsFragment();
+    public static FeedFragment newInstance(String param1, String param2) {
+        FeedFragment fragment = new FeedFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -79,10 +79,7 @@ public class PopularSongsFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -101,11 +98,21 @@ public class PopularSongsFragment extends Fragment implements LoaderManager.Load
             }
         }));
 
-        Intent i = new Intent(getActivity(), SearchIntentService.class);
-        i.setAction(SearchIntentService.ACTION_TOP_TRACKS);
-        i.putExtra("url", Constants.getTopTracksURL("india"));
-        getActivity().startService(i);
+        // If this is Popular Songs tab, then start intent service to obtain pop songs
+        if(type == 0) {
+            Intent i = new Intent(getActivity(), SearchIntentService.class);
+            i.setAction(SearchIntentService.ACTION_TOP_TRACKS);
+            i.putExtra("url", Constants.getTopTracksURL("india"));
+            getActivity().startService(i);
+        }
+
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -124,35 +131,23 @@ public class PopularSongsFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        Intent clear = new Intent(getActivity(), ClearIntentService.class);
-        getActivity().startService(clear);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri popUri = SongContract.SearchEntry.CONTENT_URI;
+        Uri uri = SongContract.SearchEntry.CONTENT_URI;
+
+        if(type == 0) {
+            uri = SongContract.SearchEntry.CONTENT_URI;
+        } else {
+            uri = SongContract.SongEntry.buildSongRecentUri(type);
+        }
 
         return new CursorLoader(getActivity(),
-                popUri,
+                uri,
                 null,
                 null,
                 null,
@@ -162,7 +157,6 @@ public class PopularSongsFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null) {
-            Log.d("Pop loader", "Data items : " + data.getCount());
             adapter.setCursor(data);
         }
     }
@@ -185,5 +179,9 @@ public class PopularSongsFragment extends Fragment implements LoaderManager.Load
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

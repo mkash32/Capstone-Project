@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.mkash32.lyricfinder.Activities.RecentSavedFragment;
+import com.example.mkash32.lyricfinder.Activities.FeedFragment;
 import com.example.mkash32.lyricfinder.R;
 import com.squareup.picasso.Picasso;
 
@@ -37,16 +37,17 @@ public class RecentSavedSongsAdapter extends RecyclerView.Adapter<RecentSavedSon
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         mCursor.moveToPosition(i);
-        viewHolder.getArtist().setText(mCursor.getString(RecentSavedFragment.COL_ARTIST));
-        viewHolder.getTitle().setText(mCursor.getString(RecentSavedFragment.COL_TITLE));
+        viewHolder.getArtist().setText(mCursor.getString(FeedFragment.COL_ARTIST));
+        viewHolder.getTitle().setText(mCursor.getString(FeedFragment.COL_TITLE));
         viewHolder.getStar().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO: save to favorites on click
             }
         });
-
-        Picasso.with(c).load(mCursor.getString(RecentSavedFragment.COL_IMAGE_URL)).into(viewHolder.getArtistImage());
+        String img = mCursor.getString(FeedFragment.COL_IMAGE_URL);
+        if(img != null && !img.isEmpty())
+            Picasso.with(c).load(img).into(viewHolder.getArtistImage());
     }
 
     @Override

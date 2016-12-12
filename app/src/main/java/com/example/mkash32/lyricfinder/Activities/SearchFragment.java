@@ -16,24 +16,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mkash32.lyricfinder.Adapters.RecyclerOnTouchListener;
 import com.example.mkash32.lyricfinder.Adapters.RecentSavedSongsAdapter;
+import com.example.mkash32.lyricfinder.Adapters.RecyclerOnTouchListener;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
-import com.example.mkash32.lyricfinder.Song;
-
-import java.util.ArrayList;
-
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RecentSavedFragment.OnFragmentInteractionListener} interface
+ * {@link SearchFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RecentSavedFragment#newInstance} factory method to
+ * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecentSavedFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -46,16 +42,9 @@ public class RecentSavedFragment extends Fragment implements LoaderManager.Loade
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
     private RecentSavedSongsAdapter adapter;
-    private boolean recent;
-
-    public static final int COL_TITLE = 0;
-    public static final int COL_ARTIST = 1;
-    public static final int COL_IMAGE_URL = 2;
-    public static final int COL_LYRICS = 3;
-    public static final int COL_RECENT = 4;
 
 
-    public RecentSavedFragment() {
+    public SearchFragment() {
         // Required empty public constructor
     }
 
@@ -65,11 +54,11 @@ public class RecentSavedFragment extends Fragment implements LoaderManager.Loade
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RecentSavedFragment.
+     * @return A new instance of fragment SearchFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RecentSavedFragment newInstance(String param1, String param2) {
-        RecentSavedFragment fragment = new RecentSavedFragment();
+    public static SearchFragment newInstance(String param1, String param2) {
+        SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -80,7 +69,10 @@ public class RecentSavedFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     @Override
@@ -102,12 +94,6 @@ public class RecentSavedFragment extends Fragment implements LoaderManager.Loade
         return v;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
-    }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -124,17 +110,33 @@ public class RecentSavedFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri recentSavedUri = SongContract.SongEntry.buildSongRecentUri(recent);
+        Uri popUri = SongContract.SearchEntry.CONTENT_URI;
 
         return new CursorLoader(getActivity(),
-                recentSavedUri,
+                popUri,
                 null,
                 null,
                 null,
@@ -144,6 +146,7 @@ public class RecentSavedFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null) {
+            Log.d("Pop loader", "Data items : " + data.getCount());
             adapter.setCursor(data);
         }
     }
@@ -166,9 +169,5 @@ public class RecentSavedFragment extends Fragment implements LoaderManager.Loade
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public void setRecent(boolean recent) {
-        this.recent = recent;
     }
 }

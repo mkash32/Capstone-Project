@@ -38,7 +38,9 @@
             android:exported="false" />
         <service
             android:name=".ClearIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".Activities.SearchActivity"></activity>
     </application>
 
 </manifest>

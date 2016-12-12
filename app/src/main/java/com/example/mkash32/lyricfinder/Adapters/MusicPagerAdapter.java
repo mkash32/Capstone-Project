@@ -5,8 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.mkash32.lyricfinder.Activities.RecentSavedFragment;
-import com.example.mkash32.lyricfinder.Activities.PopularSongsFragment;
+import com.example.mkash32.lyricfinder.Activities.FeedFragment;
 
 /**
  * Created by Aakash on 11/12/16.
@@ -23,17 +22,9 @@ public class MusicPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if(position == 0) {
-            return new PopularSongsFragment();
-        } else {
-            RecentSavedFragment f = new RecentSavedFragment();
-            if(position == 1) {
-                f.setRecent(true);
-            } else {
-                f.setRecent(false);
-            }
-            return f;
-        }
+        FeedFragment f = new FeedFragment();
+        f.setType(position);
+        return f;
     }
     @Override
     public int getCount() {

@@ -10,7 +10,7 @@ public class Constants {
 
         public static final String LF_TRACK_SEARCH = "method=track.search";
         public static final String LF_GEO_TOP = "method=geo.gettoptracks";
-        //public static final String LAST_FM_API_KEY = "api_key=YOUR_KEY_HERE";
+        //public static final String LAST_FM_API_KEY = "api_key=";
         public static final String JSON_FORMAT = "format=json";
 
     public static String getTopTracksURL(String Country) {
