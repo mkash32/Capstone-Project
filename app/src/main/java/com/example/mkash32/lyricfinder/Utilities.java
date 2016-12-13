@@ -19,6 +19,17 @@ public class Utilities {
     public static ContentValues[] parseJsonTop(String string) {
         try {
             JSONObject object = new JSONObject(string);
+            if(object.has("error")) {
+                int errorCode = object.getInt("error");
+                if(errorCode == 6) {
+                    // Country param error
+                    ContentValues[] errors = new ContentValues[1];
+                    ContentValues error = new ContentValues();
+                    error.put("error", 6);
+                    errors[0] = error;
+                    return errors;
+                }
+            }
             JSONArray array = object.getJSONObject("tracks").getJSONArray("track");
             int size = Math.min(array.length(), Constants.maxResults);
             ContentValues[] values = new ContentValues[size];
@@ -92,6 +103,17 @@ public class Utilities {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String getCountryFromJson(String string) {
+        try {
+            JSONObject object = new JSONObject(string);
+            String countryName = object.getString("countryName");
+            return countryName.trim().toLowerCase();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return Constants.DEFAULT_COUNTRY;
     }
 
 }

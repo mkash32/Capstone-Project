@@ -31,9 +31,14 @@ public class ApiIntentService extends IntentService {
     public final static String EXT_TITLE = "title";
     public final static String EXT_ARTIST = "artist";
     public final static String EXT_URL = "url";
+    public final static String EXT_LAT = "lat";
+    public final static String EXT_LON = "lng";
 
     public final static String RESPONSE_LYRICS = ACTION_LYRICS;
     public final static String RESPONSE_SHOULD_INSERT = "insert";
+    public final static String RESPONSE_COUNTRY = "country";
+
+    public final static float LAT_LON_ERR = 200;    // LAT/LON not found
 
     public ApiIntentService() {
         super("ApiIntentService");
@@ -45,7 +50,7 @@ public class ApiIntentService extends IntentService {
         if (intent != null) {
             String action = intent.getAction();
             if(action.equals(ACTION_GEONAME)) {
-                handleGeoname();
+                handleGeoname(intent.getFloatExtra(EXT_LAT, LAT_LON_ERR), intent.getFloatExtra(EXT_LON, LAT_LON_ERR));
             } else if(action.equals(ACTION_LYRICS)) {
                 handleLyrics(intent.getStringExtra(EXT_TITLE), intent.getStringExtra(EXT_ARTIST));
             } else if(action.equals(ACTION_SEARCH)) {
@@ -67,6 +72,11 @@ public class ApiIntentService extends IntentService {
             values = Utilities.parseJsonSearch(response);
         } else {
             values = Utilities.parseJsonTop(response);
+            if(values[0].containsKey("error")) {
+                // Country param error received, retry request with default country
+                handleSearchTop(Constants.getLFTopTracksURL(Constants.DEFAULT_COUNTRY),false);
+                return;
+            }
         }
 
         if (values != null) {
@@ -74,8 +84,24 @@ public class ApiIntentService extends IntentService {
         }
     }
 
-    public void handleGeoname() {
+    // Broadcasts the country name retreived from Geonames api
+    // In case of invalid response, Default country is returned
+    public void handleGeoname(float lat, float lon) {
+        if(lat == LAT_LON_ERR || lon == LAT_LON_ERR) {
+            broadcastCountryName(Constants.DEFAULT_COUNTRY);
+            return;
+        }
 
+        String url = Constants.getGeoNameUrl(lat, lon);
+        String response = executeRequest(url);
+        if(response == null) {
+            Log.d("IntentService", "Null response from OkHttp");
+            broadcastCountryName(Constants.DEFAULT_COUNTRY);
+            return;
+        }
+
+        String country = Utilities.getCountryFromJson(response);
+        broadcastCountryName(country);
     }
 
     // Looks for lyrics in the DB, if not present requests MusixMatch
@@ -153,6 +179,14 @@ public class ApiIntentService extends IntentService {
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra(RESPONSE_LYRICS, lyrics);
         broadcastIntent.putExtra(RESPONSE_SHOULD_INSERT, shouldInsert);
+        sendBroadcast(broadcastIntent);
+    }
+
+    public void broadcastCountryName(String country) {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(FeedFragment.CountryReceiver.PROCESS_COUNTRY_RESPONSE);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra(RESPONSE_COUNTRY, country);
         sendBroadcast(broadcastIntent);
     }
 

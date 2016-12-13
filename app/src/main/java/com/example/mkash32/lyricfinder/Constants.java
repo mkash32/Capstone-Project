@@ -24,7 +24,7 @@ public class Constants {
         return LF_BASE_URL + LF_TRACK_SEARCH + "&track=" + title + "&" + LAST_FM_API_KEY + "&" + JSON_FORMAT;
     }
 
-    //MusixMatch API Endpoint Construction Constants
+    // MusixMatch API Endpoint Construction Constants
     public static final String MM_BASE_URL = "http://api.musixmatch.com/ws/1.1/";
 
         //public static final String MM_API_KEY = "apikey=";
@@ -43,5 +43,19 @@ public class Constants {
         return MM_BASE_URL + MM_GET_TRACK + MM_ARTIST + artist + "&" + MM_TITLE + title + "&" + MM_API_KEY;
     }
 
+
+    // Geonames API Endpoint Construction Constants
+    public static final String GN_BASE_URL = "http://api.geonames.org/countryCodeJSON?";
+
+            //public static final String GN_USERNAME = "username=";
+            public static final String GN_LAT = "lat=";
+            public static final String GN_LON = "lng=";
+
+    // Default country in case of geoname/lastfm failure
+    public static final String DEFAULT_COUNTRY = "india";
+
+    public static String getGeoNameUrl(float lat, float lon) {
+        return GN_BASE_URL + GN_LAT + lat + "&" + GN_LON + lon + "&" + GN_USERNAME;
+    }
 
 }

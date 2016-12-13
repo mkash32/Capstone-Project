@@ -96,8 +96,6 @@ public class LyricsActivity extends AppCompatActivity {
                 startService(i);
             }
         }
-
-
     }
 
 }

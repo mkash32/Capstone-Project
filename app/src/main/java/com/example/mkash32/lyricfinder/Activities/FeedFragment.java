@@ -1,7 +1,9 @@
 package com.example.mkash32.lyricfinder.Activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
@@ -13,6 +15,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
+import com.example.mkash32.lyricfinder.Services.DataIntentService;
 
 
 /**
@@ -48,6 +52,8 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     private SongsAdapter adapter;
     private Location lastLocation;
     private String country;
+
+    private CountryReceiver receiver;
 
     //0 - Popular, 1 - Recent, 2 - Saved
     private int type = 0;
@@ -107,14 +113,6 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
             }
         }));
 
-        // If this is Popular Songs tab, then start intent service to obtain pop songs
-        if(type == 0) {
-            Intent i = new Intent(getActivity(), ApiIntentService.class);
-            i.setAction(ApiIntentService.ACTION_TOP_TRACKS);
-            i.putExtra(ApiIntentService.EXT_URL, Constants.getLFTopTracksURL("india"));
-            getActivity().startService(i);
-        }
-
         return v;
     }
 
@@ -128,6 +126,26 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Register Receiver if we are getting Top movies of region
+        if (type == 0) {
+            IntentFilter filter = new IntentFilter(CountryReceiver.PROCESS_COUNTRY_RESPONSE);
+            filter.addCategory(Intent.CATEGORY_DEFAULT);
+            receiver = new CountryReceiver();
+            getActivity().registerReceiver(receiver, filter);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(type == 0) {
+            getActivity().unregisterReceiver(receiver);
         }
     }
 
@@ -193,5 +211,21 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public class CountryReceiver extends BroadcastReceiver {
+
+        public static final String PROCESS_COUNTRY_RESPONSE = "com.example.mkash32.lyricsfinder.intent.action.PROCESS_COUNTRY_RESPONSE";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("LyricsActivity", "Received lyrics");
+            String country = intent.getStringExtra(ApiIntentService.RESPONSE_COUNTRY);
+            // Start intent service to obtain pop songs
+            Intent i = new Intent(getActivity(), ApiIntentService.class);
+            i.setAction(ApiIntentService.ACTION_TOP_TRACKS);
+            i.putExtra(ApiIntentService.EXT_URL, Constants.getLFTopTracksURL(country));
+            getActivity().startService(i);
+        }
     }
 }
