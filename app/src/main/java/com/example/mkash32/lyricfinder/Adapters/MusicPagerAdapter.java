@@ -15,7 +15,6 @@ import com.example.mkash32.lyricfinder.Activities.FeedFragment;
 public class MusicPagerAdapter extends FragmentPagerAdapter {
     private Context c;
     private String[] tabTitles = {"Popular","Recents","Saved"};
-    private Location lastLocation;
 
     public MusicPagerAdapter(FragmentManager fm, Context c) {
         super(fm);

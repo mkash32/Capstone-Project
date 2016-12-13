@@ -68,7 +68,6 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
     private SongsAdapter adapter;
-    private String country;
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;

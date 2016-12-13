@@ -41,7 +41,9 @@
             android:name=".Services.DataIntentService"
             android:exported="false" />
 
-        <activity android:name=".Activities.SearchActivity" />
+        <activity android:name=".Activities.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".Activities.MainActivity"/>
 
         <receiver android:name=".Widget.LyricsWidget">
             <intent-filter>

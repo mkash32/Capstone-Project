@@ -1,6 +1,7 @@
 package com.example.mkash32.lyricfinder.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,14 +12,19 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.mkash32.lyricfinder.Adapters.SongsAdapter;
+import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
+import com.example.mkash32.lyricfinder.Services.ApiIntentService;
+import com.example.mkash32.lyricfinder.Services.DataIntentService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +47,8 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
     private SongsAdapter adapter;
-
+    private EditText searchText;
+    private Button searchButton;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -72,18 +79,43 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        // Initialize by clearing search table
+        Intent clear = new Intent(getActivity(), DataIntentService.class);
+        clear.setAction(DataIntentService.ACTION_DELETE);
+        getActivity().startService(clear);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_feed, container, false);
+        View v = inflater.inflate(R.layout.fragment_search, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler);
+        searchButton = (Button) v.findViewById(R.id.button_search);
+        searchText = (EditText) v.findViewById(R.id.searchText);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new SongsAdapter(getActivity(), false);
         recycler.setAdapter(adapter);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Clear before each search
+                Intent clear = new Intent(getActivity(), DataIntentService.class);
+                clear.setAction(DataIntentService.ACTION_DELETE);
+                getActivity().startService(clear);
 
+                // Perform search
+                String text = searchText.getText().toString();
+                String url = Constants.getLFSearchURL(text);
+                Intent i = new Intent(getActivity(), ApiIntentService.class);
+                i.setAction(ApiIntentService.ACTION_SEARCH);
+                i.putExtra("url", url);
+                getActivity().startService(i);
+
+                hideKeyboard();
+            }
+        });
         return v;
     }
 
@@ -95,6 +127,12 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -103,9 +141,11 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
+    public void onStop() {
+        super.onStop();
+        Intent clear = new Intent(getActivity(), DataIntentService.class);
+        clear.setAction(DataIntentService.ACTION_DELETE);
+        getActivity().startService(clear);
     }
 
     @Override
@@ -115,21 +155,10 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri popUri = SongContract.SearchEntry.CONTENT_URI;
-
+        Uri uri = SongContract.SearchEntry.CONTENT_URI;
         return new CursorLoader(getActivity(),
-                popUri,
+                uri,
                 null,
                 null,
                 null,
@@ -139,7 +168,6 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null) {
-            Log.d("Pop loader", "Data items : " + data.getCount());
             adapter.setCursor(data);
         }
     }
@@ -162,5 +190,14 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager inputManager =
+                (InputMethodManager) getActivity().
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(
+                getActivity().getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

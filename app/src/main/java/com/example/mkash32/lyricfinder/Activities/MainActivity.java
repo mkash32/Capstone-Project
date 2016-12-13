@@ -27,6 +27,7 @@ import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
 import com.example.mkash32.lyricfinder.Services.ApiIntentService;
+import com.example.mkash32.lyricfinder.Utilities;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -55,16 +56,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Start search activity
-                Intent search = new Intent(activity, SearchActivity.class);
-                activity.startActivity(search);
-            }
-        });
-
+        if(!Utilities.isTablet(this)) {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Start search activity
+                    Intent search = new Intent(activity, SearchActivity.class);
+                    activity.startActivity(search);
+                }
+            });
+        }
         viewPager = (ViewPager) findViewById(R.id.pager);
         tabs = (TabLayout) findViewById(R.id.tabs);
         pagerAdapter = new MusicPagerAdapter(getSupportFragmentManager(), this);
@@ -88,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        } else if (id == R.id.action_search) {
+            // Start search activity
+            Intent search = new Intent(activity, SearchActivity.class);
+            activity.startActivity(search);
             return true;
         }
 

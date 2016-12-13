@@ -39,10 +39,10 @@ public class Constants {
         return MM_BASE_URL + MM_GET_LYRICS + trackId + "&" + MM_CALLBACK + "&" + MM_API_KEY;
     }
 
-    
     public static String getMMTrackUrl(String title, String artist) {
         return MM_BASE_URL + MM_GET_TRACK + MM_ARTIST + artist + "&" + MM_TITLE + title + "&" + MM_API_KEY;
     }
+
 
     // Geonames API Endpoint Construction Constants
     public static final String GN_BASE_URL = "http://api.geonames.org/countryCodeJSON?";
