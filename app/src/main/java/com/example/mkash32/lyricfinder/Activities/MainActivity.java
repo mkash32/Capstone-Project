@@ -32,6 +32,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -40,13 +41,14 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private ViewPager viewPager;
     private TabLayout tabs;
     private MusicPagerAdapter pagerAdapter;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
+    private LocationRequest locationRequest;
     private Activity activity = this;
 
     private final int REQUEST_LOCATION = 1;
@@ -158,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public void verifyLocationSettings() {
-        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(30 * 1000);
         locationRequest.setFastestInterval(5 * 1000);
@@ -195,19 +197,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1000 && resultCode == RESULT_OK) {
-            getLocation();
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
         }
     }
 
-    public void testMatcher() {
-        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        final String authority = SongContract.CONTENT_AUTHORITY;
-
-        matcher.addURI(authority, SongContract.PATH_SONG, 100);
-        matcher.addURI(authority, SongContract.PATH_SONG + "/#" , 101);
-        matcher.addURI(authority, SongContract.PATH_SEARCH + "/*/*", 102);
-        matcher.addURI(authority, SongContract.PATH_SEARCH, 103);
-        Uri uri = SongContract.SongEntry.buildTitleArtistUri("title", "artist");
-        //int result = matcher.match(uri)
+    // Get the first location response and then remove update
+    @Override
+    public void onLocationChanged(Location location) {
+        if(location != null) {
+            mLastLocation = location;
+            Log.d("Last location", "Lat : " + mLastLocation.getLatitude());
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
     }
+
 }

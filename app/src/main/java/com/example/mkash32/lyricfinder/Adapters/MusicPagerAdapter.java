@@ -1,6 +1,7 @@
 package com.example.mkash32.lyricfinder.Adapters;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,6 +15,7 @@ import com.example.mkash32.lyricfinder.Activities.FeedFragment;
 public class MusicPagerAdapter extends FragmentPagerAdapter {
     private Context c;
     private String[] tabTitles = {"Popular","Recents","Saved"};
+    private Location lastLocation;
 
     public MusicPagerAdapter(FragmentManager fm, Context c) {
         super(fm);

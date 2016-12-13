@@ -116,6 +116,7 @@ public class ApiIntentService extends IntentService {
         String lyrics = Utilities.parseLyrics(response);
         int updated = 0;
         if(lyrics != null && !lyrics.isEmpty()) {
+            lyrics = lyrics.substring(0, lyrics.length() - 70);  // Remove "non commercial use" suffix of the lyric string
             ContentValues values = new ContentValues();
             values.put(SongContract.SongEntry.COLUMN_LYRICS, lyrics);
             String[] selectionArgs = new String[]{title, artist};

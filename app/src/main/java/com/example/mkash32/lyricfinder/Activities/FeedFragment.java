@@ -3,6 +3,7 @@ package com.example.mkash32.lyricfinder.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +23,6 @@ import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
-import com.google.android.gms.common.api.Api;
 
 
 /**
@@ -46,6 +46,9 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
     private SongsAdapter adapter;
+    private Location lastLocation;
+    private String country;
+
     //0 - Popular, 1 - Recent, 2 - Saved
     private int type = 0;
     public static final int COL_TITLE = 0;
