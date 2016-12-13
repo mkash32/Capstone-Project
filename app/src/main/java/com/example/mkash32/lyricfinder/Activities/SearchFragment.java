@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mkash32.lyricfinder.Adapters.SongsAdapter;
-import com.example.mkash32.lyricfinder.Adapters.RecyclerOnTouchListener;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
 
@@ -84,12 +83,6 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new SongsAdapter(getActivity(), false);
         recycler.setAdapter(adapter);
-        recycler.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), new RecyclerOnTouchListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                // TODO: define what to do when item is clicked
-            }
-        }));
 
         return v;
     }
