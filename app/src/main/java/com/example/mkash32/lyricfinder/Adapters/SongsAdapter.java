@@ -14,9 +14,11 @@ import android.widget.TextView;
 
 import com.example.mkash32.lyricfinder.Activities.FeedFragment;
 import com.example.mkash32.lyricfinder.Activities.LyricsActivity;
+import com.example.mkash32.lyricfinder.Activities.MainActivity;
 import com.example.mkash32.lyricfinder.R;
 import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Services.DataIntentService;
+import com.example.mkash32.lyricfinder.Utilities;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -27,12 +29,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
     private Cursor mCursor;
-    private boolean usesSongTable;
+    private boolean usesSongTable, isTab;
     private Activity activity;
 
     public SongsAdapter(Activity activity, boolean usesSongTable) {
         this.activity = activity;
         this.usesSongTable = usesSongTable;
+        isTab = Utilities.isTablet(activity);
     }
 
     @Override
@@ -70,11 +73,16 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>{
         viewHolder.getContainer().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(activity, LyricsActivity.class);
-                i.putExtra(ApiIntentService.EXT_TITLE, title);
-                i.putExtra(ApiIntentService.EXT_ARTIST, artist);
-                i.putExtra(ApiIntentService.EXT_URL, img);
-                activity.startActivity(i);
+                if(isTab) {
+                    MainActivity main = (MainActivity) activity;
+                    main.setSong(title, artist, img);
+                } else {
+                    Intent i = new Intent(activity, LyricsActivity.class);
+                    i.putExtra(ApiIntentService.EXT_TITLE, title);
+                    i.putExtra(ApiIntentService.EXT_ARTIST, artist);
+                    i.putExtra(ApiIntentService.EXT_URL, img);
+                    activity.startActivity(i);
+                }
             }
         });
 

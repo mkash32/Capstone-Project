@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabs;
     private MusicPagerAdapter pagerAdapter;
     private Activity activity = this;
+    private LyricsFragment lyricsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(!Utilities.isTablet(this)) {
+        boolean isTab = Utilities.isTablet(this);
+
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        tabs = (TabLayout) findViewById(R.id.tabs);
+        pagerAdapter = new MusicPagerAdapter(getSupportFragmentManager(), this, isTab);
+        viewPager.setAdapter(pagerAdapter);
+        tabs.setupWithViewPager(viewPager);
+
+        if(!isTab) {
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -66,12 +75,9 @@ public class MainActivity extends AppCompatActivity {
                     activity.startActivity(search);
                 }
             });
+        } else {
+            lyricsFragment = (LyricsFragment) getSupportFragmentManager().findFragmentById(R.id.lyrics_frag);
         }
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        tabs = (TabLayout) findViewById(R.id.tabs);
-        pagerAdapter = new MusicPagerAdapter(getSupportFragmentManager(), this);
-        viewPager.setAdapter(pagerAdapter);
-        tabs.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -91,11 +97,6 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.action_search) {
-            // Start search activity
-            Intent search = new Intent(activity, SearchActivity.class);
-            activity.startActivity(search);
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -114,6 +115,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    // Only relevant in tablets
+    public void setSong(String title, String artist, String image) {
+        lyricsFragment.setSong(title, artist, image);
     }
 
 }

@@ -68,6 +68,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     private OnFragmentInteractionListener mListener;
     private RecyclerView recycler;
     private SongsAdapter adapter;
+    private String country;
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -262,6 +263,10 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
         }
     }
 
+    public void requestLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+    }
+
     @Override
     public void onLocationChanged(Location location) {
         if(location != null) {
@@ -293,9 +298,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
                 final LocationSettingsStates state = result.getLocationSettingsStates();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                        Log.d("Last location", "Lat : " + mLastLocation.getLatitude());
-                        startGeoNameRequest();
+                        requestLocationUpdates();
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         try {
@@ -329,7 +332,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1000 && resultCode == RESULT_OK) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+            requestLocationUpdates();
         }
     }
 

@@ -1,14 +1,25 @@
 package com.example.mkash32.lyricfinder.Activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.mkash32.lyricfinder.R;
+import com.example.mkash32.lyricfinder.Services.ApiIntentService;
+import com.example.mkash32.lyricfinder.Services.DataIntentService;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +40,12 @@ public class LyricsFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private TextView tv_lyrics, tv_artist, tv_title;
+    private ImageView artist_image;
+    private String title, artist, url;
+
+    private LyricsReceiver receiver;
+
 
     public LyricsFragment() {
         // Required empty public constructor
@@ -65,7 +82,16 @@ public class LyricsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lyrics, container, false);
+        View v = inflater.inflate(R.layout.fragment_lyrics, container, false);
+        tv_artist = (TextView) v.findViewById(R.id.tv_artist);
+        tv_title = (TextView) v.findViewById(R.id.tv_title);
+        tv_lyrics = (TextView) v.findViewById(R.id.tv_lyrics);
+
+        tv_lyrics.setMovementMethod(new ScrollingMovementMethod());
+
+
+        artist_image = (ImageView) v.findViewById(R.id.artist_image);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -80,9 +106,6 @@ public class LyricsFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -90,6 +113,22 @@ public class LyricsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Register Receiver
+        IntentFilter filter = new IntentFilter(LyricsReceiver.PROCESS_RESPONSE);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new LyricsReceiver();
+        getActivity().registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(receiver);
     }
 
     /**
@@ -105,5 +144,49 @@ public class LyricsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void setSong(String title, String artist, String image){
+        this.title = title;
+        this.artist = artist;
+        this.url = image;
+
+        tv_lyrics.setText("Loading...");
+        tv_artist.setText(artist);
+        tv_title.setText(title);;
+        Picasso.with(getActivity()).load(image).into(artist_image);
+
+
+        // Start intent service to get lyrics
+        Intent i = new Intent(getActivity(), ApiIntentService.class);
+        i.setAction(ApiIntentService.ACTION_LYRICS);
+        i.putExtra(ApiIntentService.EXT_TITLE, title);
+        i.putExtra(ApiIntentService.EXT_ARTIST, artist);
+        getActivity().startService(i);
+    }
+
+    public class LyricsReceiver extends BroadcastReceiver {
+
+        public static final String PROCESS_RESPONSE = "com.example.mkash32.lyricsfinder.intent.action.PROCESS_RESPONSE";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("LyricsActivity", "Received lyrics");
+            String lyrics = intent.getStringExtra(ApiIntentService.RESPONSE_LYRICS);
+            tv_lyrics.setText(lyrics);
+
+            // Start intent service to save this song as recent into the song table
+            boolean shouldInsert = intent.getBooleanExtra(ApiIntentService.RESPONSE_SHOULD_INSERT, false);
+            if(shouldInsert) {
+                Intent i = new Intent(getActivity(), DataIntentService.class);
+                i.setAction(DataIntentService.ACTION_INSERT);
+                i.putExtra(DataIntentService.EXT_TITLE, title);
+                i.putExtra(DataIntentService.EXT_ARTIST, artist);
+                i.putExtra(DataIntentService.EXT_IMAGE, url);
+                i.putExtra(DataIntentService.EXT_LYRICS, lyrics);
+                i.putExtra(DataIntentService.EXT_RECENT, 1);
+                getActivity().startService(i);
+            }
+        }
     }
 }
