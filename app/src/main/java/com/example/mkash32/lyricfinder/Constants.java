@@ -5,6 +5,9 @@ package com.example.mkash32.lyricfinder;
  */
 
 public class Constants {
+    //public static final String LAST_FM_API_KEY = "api_key=YOUR_LAST_FM_API_KEY";
+    //public static final String MM_API_KEY = "apikey=YOUR_MUSIX_MATCH_API_KEY";
+    //public static final String GN_USERNAME = "username=YOUR_GEONAME_USERNAME";
 
     //LastFm API Endpoint Construction Constants
     public static final int maxResults = 10;
@@ -12,7 +15,6 @@ public class Constants {
 
         public static final String LF_TRACK_SEARCH = "method=track.search";
         public static final String LF_GEO_TOP = "method=geo.gettoptracks";
-        //public static final String LAST_FM_API_KEY = "api_key=";
         public static final String JSON_FORMAT = "format=json";
 
 
@@ -26,8 +28,6 @@ public class Constants {
 
     // MusixMatch API Endpoint Construction Constants
     public static final String MM_BASE_URL = "http://api.musixmatch.com/ws/1.1/";
-
-        //public static final String MM_API_KEY = "apikey=";
 
         public static final String MM_GET_LYRICS = "track.lyrics.get?track_id=";
         public static final String MM_GET_TRACK = "matcher.track.get?";
@@ -47,7 +47,6 @@ public class Constants {
     // Geonames API Endpoint Construction Constants
     public static final String GN_BASE_URL = "http://api.geonames.org/countryCodeJSON?";
 
-            //public static final String GN_USERNAME = "username=";
             public static final String GN_LAT = "lat=";
             public static final String GN_LON = "lng=";
 

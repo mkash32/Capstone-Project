@@ -10,7 +10,6 @@
     <string name="widget_title_bar">LyricFinder\nSaved Songs</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="adUnitId"></string>
-    <string name="adAppId"></string>
-
+    <string name="adUnitId">YOUR_AD_UNIT_ID_HERE</string>
+    <string name="adAppId">YOUR_APP_ID_HERE</string>
 </resources>
