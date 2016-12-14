@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Services;
+package com.example.mkash32.lyricfinder.services;
 
 import android.app.IntentService;
 import android.content.ContentValues;
@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.mkash32.lyricfinder.Data.SongContract;
+import com.example.mkash32.lyricfinder.data.SongContract;
 
 // Used to clear the Search Table
 public class DataIntentService extends IntentService {

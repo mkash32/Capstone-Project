@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:screenOrientation="landscape"
-    tools:context=".Activities.MainActivity">
+    tools:context=".activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -59,7 +59,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:id="@+id/lyrics_frag"
-            android:name="com.example.mkash32.lyricfinder.Activities.LyricsFragment"/>
+            android:name="com.example.mkash32.lyricfinder.activities.LyricsFragment"/>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

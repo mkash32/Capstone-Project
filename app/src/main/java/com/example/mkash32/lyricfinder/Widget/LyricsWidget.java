@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Widget;
+package com.example.mkash32.lyricfinder.widget;
 
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.example.mkash32.lyricfinder.Activities.LyricsActivity;
+import com.example.mkash32.lyricfinder.activities.LyricsActivity;
 import com.example.mkash32.lyricfinder.R;
 
 /**

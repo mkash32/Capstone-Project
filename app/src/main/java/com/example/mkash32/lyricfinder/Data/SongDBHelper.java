@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Data;
+package com.example.mkash32.lyricfinder.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -6,7 +6,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.example.mkash32.lyricfinder.Data.SongContract;
+import com.example.mkash32.lyricfinder.data.SongContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 /**
  * Created by Aakash on 11/12/16.

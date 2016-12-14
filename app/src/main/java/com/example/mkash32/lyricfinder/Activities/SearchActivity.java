@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Activities;
+package com.example.mkash32.lyricfinder.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,10 +1,9 @@
-package com.example.mkash32.lyricfinder.Activities;
+package com.example.mkash32.lyricfinder.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -18,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mkash32.lyricfinder.R;
-import com.example.mkash32.lyricfinder.Services.ApiIntentService;
-import com.example.mkash32.lyricfinder.Services.DataIntentService;
+import com.example.mkash32.lyricfinder.services.ApiIntentService;
+import com.example.mkash32.lyricfinder.services.DataIntentService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.squareup.picasso.Picasso;

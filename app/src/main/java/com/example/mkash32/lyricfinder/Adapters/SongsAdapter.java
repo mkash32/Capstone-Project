@@ -1,7 +1,6 @@
-package com.example.mkash32.lyricfinder.Adapters;
+package com.example.mkash32.lyricfinder.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.CardView;
@@ -12,12 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.mkash32.lyricfinder.Activities.FeedFragment;
-import com.example.mkash32.lyricfinder.Activities.LyricsActivity;
-import com.example.mkash32.lyricfinder.Activities.MainActivity;
+import com.example.mkash32.lyricfinder.activities.FeedFragment;
+import com.example.mkash32.lyricfinder.activities.LyricsActivity;
+import com.example.mkash32.lyricfinder.activities.MainActivity;
 import com.example.mkash32.lyricfinder.R;
-import com.example.mkash32.lyricfinder.Services.ApiIntentService;
-import com.example.mkash32.lyricfinder.Services.DataIntentService;
+import com.example.mkash32.lyricfinder.services.ApiIntentService;
+import com.example.mkash32.lyricfinder.services.DataIntentService;
 import com.example.mkash32.lyricfinder.Utilities;
 import com.squareup.picasso.Picasso;
 

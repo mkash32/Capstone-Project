@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Activities;
+package com.example.mkash32.lyricfinder.activities;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -13,10 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.example.mkash32.lyricfinder.Adapters.LyricsRecyclerAdapter;
+import com.example.mkash32.lyricfinder.adapters.LyricsRecyclerAdapter;
 import com.example.mkash32.lyricfinder.R;
-import com.example.mkash32.lyricfinder.Services.ApiIntentService;
-import com.example.mkash32.lyricfinder.Services.DataIntentService;
+import com.example.mkash32.lyricfinder.services.ApiIntentService;
+import com.example.mkash32.lyricfinder.services.DataIntentService;
 import com.example.mkash32.lyricfinder.Song;
 import com.squareup.picasso.Picasso;
 

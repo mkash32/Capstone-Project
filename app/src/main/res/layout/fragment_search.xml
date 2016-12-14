@@ -28,7 +28,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:text="Search"
+        android:text="@string/search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/input_layout"

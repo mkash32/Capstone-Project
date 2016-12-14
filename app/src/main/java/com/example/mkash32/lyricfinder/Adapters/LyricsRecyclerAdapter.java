@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Adapters;
+package com.example.mkash32.lyricfinder.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mkash32.lyricfinder.R;
-import com.example.mkash32.lyricfinder.Song;
 
 /**
  * Created by Aakash on 11/12/16.

@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Data;
+package com.example.mkash32.lyricfinder.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

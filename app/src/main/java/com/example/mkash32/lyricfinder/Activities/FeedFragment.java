@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Activities;
+package com.example.mkash32.lyricfinder.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -26,14 +25,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mkash32.lyricfinder.Adapters.SongsAdapter;
-import com.example.mkash32.lyricfinder.Services.ApiIntentService;
+import com.example.mkash32.lyricfinder.adapters.SongsAdapter;
+import com.example.mkash32.lyricfinder.services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Constants;
-import com.example.mkash32.lyricfinder.Data.SongContract;
+import com.example.mkash32.lyricfinder.data.SongContract;
 import com.example.mkash32.lyricfinder.R;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -48,7 +44,6 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.mkash32.lyricfinder.Utilities.md5;
 
 
 /**

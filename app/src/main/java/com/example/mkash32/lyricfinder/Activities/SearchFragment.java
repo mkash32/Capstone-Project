@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Activities;
+package com.example.mkash32.lyricfinder.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,12 +20,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.mkash32.lyricfinder.Adapters.SongsAdapter;
+import com.example.mkash32.lyricfinder.adapters.SongsAdapter;
 import com.example.mkash32.lyricfinder.Constants;
-import com.example.mkash32.lyricfinder.Data.SongContract;
+import com.example.mkash32.lyricfinder.data.SongContract;
 import com.example.mkash32.lyricfinder.R;
-import com.example.mkash32.lyricfinder.Services.ApiIntentService;
-import com.example.mkash32.lyricfinder.Services.DataIntentService;
+import com.example.mkash32.lyricfinder.services.ApiIntentService;
+import com.example.mkash32.lyricfinder.services.DataIntentService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;

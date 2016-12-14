@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:fitsSystemWindows="true"
-    tools:context="com.example.mkash32.lyricfinder.Activities.SearchActivity">
+    tools:context="com.example.mkash32.lyricfinder.activities.SearchActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <fragment android:name="com.example.mkash32.lyricfinder.Activities.SearchFragment"
+    <fragment android:name="com.example.mkash32.lyricfinder.activities.SearchFragment"
         android:id="@+id/search_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

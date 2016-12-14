@@ -1,17 +1,14 @@
-package com.example.mkash32.lyricfinder.Widget;
+package com.example.mkash32.lyricfinder.widget;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.IBinder;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.example.mkash32.lyricfinder.Activities.FeedFragment;
-import com.example.mkash32.lyricfinder.Activities.LyricsActivity;
-import com.example.mkash32.lyricfinder.Data.SongContract;
+import com.example.mkash32.lyricfinder.activities.FeedFragment;
+import com.example.mkash32.lyricfinder.data.SongContract;
 import com.example.mkash32.lyricfinder.R;
 
 public class LyricsViewsFactory implements RemoteViewsService.RemoteViewsFactory {

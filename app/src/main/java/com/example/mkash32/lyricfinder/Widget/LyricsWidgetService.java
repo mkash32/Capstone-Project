@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Widget;
+package com.example.mkash32.lyricfinder.widget;
 
 import android.content.Intent;
 import android.widget.RemoteViewsService;

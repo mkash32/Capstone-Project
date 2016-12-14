@@ -1,4 +1,4 @@
-package com.example.mkash32.lyricfinder.Services;
+package com.example.mkash32.lyricfinder.services;
 
 import android.app.IntentService;
 import android.content.ContentValues;
@@ -7,10 +7,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.mkash32.lyricfinder.Activities.FeedFragment;
-import com.example.mkash32.lyricfinder.Activities.LyricsActivity;
+import com.example.mkash32.lyricfinder.activities.FeedFragment;
+import com.example.mkash32.lyricfinder.activities.LyricsActivity;
 import com.example.mkash32.lyricfinder.Constants;
-import com.example.mkash32.lyricfinder.Data.SongContract;
+import com.example.mkash32.lyricfinder.data.SongContract;
 import com.example.mkash32.lyricfinder.Utilities;
 
 import java.io.IOException;

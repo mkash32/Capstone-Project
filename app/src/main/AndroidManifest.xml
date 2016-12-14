@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -24,29 +24,29 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.LyricsActivity"
+            android:name=".activities.LyricsActivity"
             android:label="@string/title_activity_lyrics"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".Activities.MainActivity"/>
+            android:parentActivityName=".activities.MainActivity"/>
 
         <provider
-            android:name=".Data.SongProvider"
+            android:name=".data.SongProvider"
             android:authorities="com.example.mkash32.lyricfinder.app"
             android:enabled="true"
             android:exported="true" />
 
         <service
-            android:name=".Services.ApiIntentService"
+            android:name=".services.ApiIntentService"
             android:exported="false" />
         <service
-            android:name=".Services.DataIntentService"
+            android:name=".services.DataIntentService"
             android:exported="false" />
 
-        <activity android:name=".Activities.SearchActivity"
+        <activity android:name=".activities.SearchActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".Activities.MainActivity"/>
+            android:parentActivityName=".activities.MainActivity"/>
 
-        <receiver android:name=".Widget.LyricsWidget">
+        <receiver android:name=".widget.LyricsWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -57,7 +57,7 @@
         </receiver>
 
         <service
-            android:name=".Widget.LyricsWidgetService"
+            android:name=".widget.LyricsWidgetService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
