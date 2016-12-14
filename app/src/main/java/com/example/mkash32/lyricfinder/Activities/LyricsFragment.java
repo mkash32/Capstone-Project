@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -19,7 +20,11 @@ import android.widget.TextView;
 import com.example.mkash32.lyricfinder.R;
 import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Services.DataIntentService;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.squareup.picasso.Picasso;
+
+import static com.example.mkash32.lyricfinder.Utilities.md5;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +48,8 @@ public class LyricsFragment extends Fragment {
     private TextView tv_lyrics, tv_artist, tv_title;
     private ImageView artist_image;
     private String title, artist, url;
+
+    private AdView mAdView;
 
     private LyricsReceiver receiver;
 
@@ -91,6 +98,17 @@ public class LyricsFragment extends Fragment {
 
 
         artist_image = (ImageView) v.findViewById(R.id.artist_image);
+
+        // Get the device Id to initialize admob test ads on any device
+        String android_id = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String deviceId = md5(android_id).toUpperCase();
+
+        mAdView = (AdView) v.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(deviceId)
+                .build();
+        mAdView.loadAd(adRequest);
         return v;
     }
 
@@ -123,12 +141,27 @@ public class LyricsFragment extends Fragment {
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new LyricsReceiver();
         getActivity().registerReceiver(receiver, filter);
+
+        if (mAdView != null) {
+            mAdView.resume();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getActivity().unregisterReceiver(receiver);
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
     }
 
     /**

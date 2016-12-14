@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -25,6 +26,11 @@ import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
 import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Services.DataIntentService;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
+import static com.example.mkash32.lyricfinder.Utilities.md5;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +56,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     private EditText searchText;
     private Button searchButton;
 
+    private AdView mAdView;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -116,6 +123,20 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                 hideKeyboard();
             }
         });
+
+        MobileAds.initialize(getActivity(), getString(R.string.adAppId));
+
+        mAdView = (AdView) v.findViewById(R.id.adView);
+
+        String android_id = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String deviceId = md5(android_id).toUpperCase();
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(deviceId)
+                .build();
+        mAdView.loadAd(adRequest);
+
         return v;
     }
 
@@ -137,6 +158,30 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mAdView != null) {
+            mAdView.pause();
         }
     }
 

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -30,6 +31,9 @@ import com.example.mkash32.lyricfinder.Services.ApiIntentService;
 import com.example.mkash32.lyricfinder.Constants;
 import com.example.mkash32.lyricfinder.Data.SongContract;
 import com.example.mkash32.lyricfinder.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -44,6 +48,7 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.mkash32.lyricfinder.Utilities.md5;
 
 
 /**
@@ -171,6 +176,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onResume() {
         super.onResume();
+
         // Register Receiver if we are getting Top movies of region
         if (type == 0) {
             IntentFilter filter = new IntentFilter(CountryReceiver.PROCESS_COUNTRY_RESPONSE);
@@ -183,9 +189,15 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onPause() {
         super.onPause();
+
         if(type == 0) {
             getActivity().unregisterReceiver(receiver);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

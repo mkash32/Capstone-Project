@@ -63,8 +63,8 @@ public class LyricsActivity extends AppCompatActivity {
 
         adapter = new LyricsRecyclerAdapter(this);
         recyclerView.setAdapter(adapter);
-
-        Picasso.with(this).load(url).into(imageView);
+        if(url != null && !url.isEmpty())
+            Picasso.with(this).load(url).into(imageView);
     }
 
     @Override
